@@ -11,6 +11,7 @@ type Bitset struct {
 	Bytes []byte
 }
 
+// make a new bitset
 func NewBitset(size int) (*Bitset, error) {
 	if size < 0 {
 		return nil, fmt.Errorf("invalid size")
@@ -21,6 +22,7 @@ func NewBitset(size int) (*Bitset, error) {
 	return &Bitset{size, bytes}, nil
 }
 
+// sets bit corresponding to n (nth bit in b.Bytes)
 func (b *Bitset) SetBit(n int) error {
 	if n > b.Max {
 		return fmt.Errorf("out of range")
