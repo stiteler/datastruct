@@ -1,12 +1,12 @@
 /*
  * First attempt at a linked list in go - (Self-Educational)
- * full disclosure, I used some code from 
- * list implementation in the golang standard library. 
+ * full disclosure, I used some code from
+ * list implementation in the golang standard library.
  */
 
-package main 
+package datastruct
 
-import(
+import (
 	"fmt"
 )
 
@@ -36,7 +36,7 @@ func (n *Node) Next() *Node {
 }
 
 type List struct {
-	root Node
+	root   Node
 	length int
 }
 
@@ -47,6 +47,7 @@ func (l *List) Init() *List {
 	l.length = 0
 	return l
 }
+
 //gets a new list
 func New() *List {
 	return new(List).Init()
@@ -55,13 +56,14 @@ func New() *List {
 func (l *List) Len() int {
 	return l.length
 }
-// inserts 
+
+// inserts
 func (l *List) insert(n, at *Node) *Node {
 	next := at.next
 	at.next = n
-	n.prev = at 
-	n.next = next 
-	n.prev = n 
+	n.prev = at
+	n.next = next
+	n.prev = n
 	n.list = l
 	l.length++
 	return n
