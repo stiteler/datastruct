@@ -64,3 +64,35 @@ func TestGetBit(t *testing.T) {
 	}
 
 }
+
+func TestClearBit(t *testing.T) {
+	bs := newBitsetOrFatal(t, 8)
+	if err := bs.SetBit(9); err == nil {
+		t.Errorf("Expected ClearBit out of range error")
+	}
+	bs.SetBit(4)
+	bs.ClearBit(4)
+	if ok, _ := bs.GetBit(4); ok {
+		t.Errorf("Expected GetBit after clear to be false")
+	}
+}
+
+func TestClear(t *testing.T) {
+	bs := newBitsetOrFatal(t, 8)
+	bs = nil
+	if err := bs.Clear(); err == nil {
+		t.Errorf("Expected clearing nil bitset error")
+	}
+
+	bs = newBitsetOrFatal(t, 8)
+	bs.SetBit(1)
+	bs.SetBit(3)
+	bs.SetBit(7)
+	bs.Clear()
+	for _byte := range bs.Bytes {
+		if _byte != 0 {
+			t.Errorf("Expected bytes == 0 after b.Clear()")
+		}
+	}
+
+}
