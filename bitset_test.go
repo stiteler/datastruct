@@ -65,18 +65,6 @@ func TestGetBit(t *testing.T) {
 
 }
 
-func TestClearBit(t *testing.T) {
-	bs := newBitsetOrFatal(t, 8)
-	if err := bs.SetBit(9); err == nil {
-		t.Errorf("Expected ClearBit out of range error")
-	}
-	bs.SetBit(4)
-	bs.ClearBit(4)
-	if ok, _ := bs.GetBit(4); ok {
-		t.Errorf("Expected GetBit after clear to be false")
-	}
-}
-
 func TestClear(t *testing.T) {
 	bs := newBitsetOrFatal(t, 8)
 	bs = nil
@@ -94,5 +82,45 @@ func TestClear(t *testing.T) {
 			t.Errorf("Expected bytes == 0 after b.Clear()")
 		}
 	}
+}
 
+func TestClearBit(t *testing.T) {
+	bs := newBitsetOrFatal(t, 8)
+	if err := bs.SetBit(9); err == nil {
+		t.Errorf("Expected ClearBit out of range error")
+	}
+	bs.SetBit(4)
+	bs.ClearBit(4)
+	if ok, _ := bs.GetBit(4); ok {
+		t.Errorf("Expected GetBit after clear to be false")
+	}
+}
+
+func TestCardinality(t *testing.T) {
+	bs := newBitsetOrFatal(t, 8)
+	bs.SetBit(1)
+	bs.SetBit(2)
+	bs.SetBit(3)
+	if bs.Cardinality() != 3 {
+		t.Errorf("Expected count of 3, got: ", bs.Cardinality())
+	}
+}
+
+func TestIsSubset(t *testing.T) {
+	bs1 := newBitsetOrFatal(t, 8)
+	bs2 := newBitsetOrFatal(t, 8)
+	bs1.SetBit(1)
+	bs1.SetBit(2)
+	bs1.SetBit(5)
+	// bs2 should be a subset of bs1
+	bs2.SetBit(1)
+	bs2.SetBit(5)
+
+	answer, err := bs2.IsSubset(bs1)
+	if err != nil {
+		t.Fatalf("unexpected error testing isSubset: ", err)
+	}
+	if answer != true {
+		t.Errorf("IsSubset test failure")
+	}
 }

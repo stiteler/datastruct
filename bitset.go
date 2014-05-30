@@ -44,6 +44,16 @@ func (b *Bitset) GetBit(n int) (bool, error) {
 	return answer, nil
 }
 
+func (b *Bitset) Clear() error {
+	if b == nil {
+		return fmt.Errorf("Can't clear nil bitset")
+	}
+	for _byte := range b.Bytes {
+		b.Bytes[_byte] = 0
+	}
+	return nil
+}
+
 // clears nth bit from bitset
 func (b *Bitset) ClearBit(n int) error {
 	if n > b.Max {
@@ -55,12 +65,40 @@ func (b *Bitset) ClearBit(n int) error {
 	return nil
 }
 
-func (b *Bitset) Clear() error {
-	if b == nil {
-		return fmt.Errorf("Can't clear nil bitset")
+func (b *Bitset) Cardinality() int {
+	cardinality := 0
+	for i := 0; i < b.Max; i++ {
+		isSet, _ := b.GetBit(i)
+		if isSet {
+			cardinality++
+		}
 	}
-	for _byte := range b.Bytes {
-		b.Bytes[_byte] = 0
+	return cardinality
+}
+
+func (this *Bitset) IsSubset(that *Bitset) (bool, error) {
+	// check first if impossible by cardinality:
+	if this.Cardinality() > that.Cardinality() {
+		return false, nil
 	}
-	return nil
+
+	// this error handling for getBit looks a little nasty :-/
+	// there's got to be a better way...
+	for i := 0; i < this.Max; i++ {
+		res, err := this.GetBit(i)
+		if err != nil {
+			return false, err
+		}
+
+		if res {
+			res, err = that.GetBit(i)
+			if err != nil {
+				return false, err
+			}
+			if !res {
+				return false, nil
+			}
+		}
+	}
+	return true, nil
 }
