@@ -11,6 +11,21 @@ type Bitset struct {
 	Bytes []byte
 }
 
+func (b *Bitset) String() string {
+	ret := "[ "
+	for i := 0; i < b.Max; i++ {
+		// ex. of getbit error handling, might not need
+		thisBit, _ := b.GetBit(i)
+		if thisBit {
+			ret = ret + "1, "
+		} else {
+			ret = ret + "0, "
+		}
+	}
+	ret = ret + "]"
+	return ret
+}
+
 // NewBitset makes a new bitset given a size (int)
 func NewBitset(size int) (*Bitset, error) {
 	if size < 0 {
@@ -35,6 +50,8 @@ func (b *Bitset) SetBit(n int) error {
 
 // GetBit returns true if nth bit in b.Bytes is 1, false if 0
 func (b *Bitset) GetBit(n int) (bool, error) {
+	// there's been a lot of issues with GetBit returning an error to handle..
+	// better way?
 	if n > b.Max {
 		return false, fmt.Errorf("out of range")
 	}
@@ -117,11 +134,64 @@ func (b *Bitset) Contains(n int) bool {
 }
 
 func (this *Bitset) Equals(that *Bitset) bool {
+	// find shorter bitset
+	minBytes := min(len(this.Bytes), len(that.Bytes))
 
-	return false
+	for i := 0; i < minBytes; i++ {
+		if this.Bytes[i] != that.Bytes[i] {
+			return false
+		}
+	}
+
+	// check beyond minBytes in each byte slice
+	if len(this.Bytes) > minBytes {
+		for i, n := minBytes, len(this.Bytes); i < n; i++ {
+			if this.Bytes[i] != 0 {
+				return false
+			}
+		}
+	}
+
+	if len(that.Bytes) > minBytes {
+		for i, n := minBytes, len(that.Bytes); i < n; i++ {
+			if that.Bytes[i] != 0 {
+				return false
+			}
+		}
+	}
+
+	return true
 }
 
-func (this *Bitset) Union(that *Bitset) *Bitset {
+func (this *Bitset) Union(that *Bitset) (*Bitset, error) {
+	size := max(len(this.Bytes), len(that.Bytes)) * 8
+	union, err := NewBitset(size)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil
+	byteCount := min(len(this.Bytes), len(that.Bytes))
+	// this isn't working:
+	for i := 0; i < byteCount; i++ {
+		// inclusive-or the two bytes into the new bitset
+		union.Bytes[i] = (this.Bytes[i] | that.Bytes[i])
+	}
+
+	return union, nil
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
 }

@@ -102,7 +102,7 @@ func TestCardinality(t *testing.T) {
 	bs.SetBit(2)
 	bs.SetBit(3)
 	if bs.Cardinality() != 3 {
-		t.Errorf("Expected count of 3, got: ", bs.Cardinality())
+		t.Errorf("Expected count of 3, got: %v", bs.Cardinality())
 	}
 }
 
@@ -118,7 +118,7 @@ func TestIsSubset(t *testing.T) {
 
 	answer, err := bs2.IsSubset(bs1)
 	if err != nil {
-		t.Fatalf("unexpected error testing isSubset: ", err)
+		t.Fatalf("unexpected error testing isSubset: %v", err)
 	}
 	if answer != true {
 		t.Errorf("IsSubset test failure")
@@ -135,36 +135,71 @@ func TestContains(t *testing.T) {
 
 	test = bs.Contains(6)
 	if test != false {
-		t.Errorf("Expected Contains to return false, got: ", test)
+		t.Errorf("Expected Contains to return false, got: %v", test)
 	}
 
 	test = bs.Contains(5)
 	if test != true {
-		t.Errorf("Expected Contains to return true, got: ", test)
+		t.Errorf("Expected Contains to return true, got: %v", test)
 	}
 }
 
 func TestEquals(t *testing.T) {
+	bs1 := newBitsetOrFatal(t, 8)
+	bs2 := newBitsetOrFatal(t, 16)
 
+	// Equals should retrun true, disregards Max
+	bs1.SetBit(1)
+	bs1.SetBit(5)
+	bs1.SetBit(7)
+
+	bs2.SetBit(1)
+	bs2.SetBit(5)
+	bs2.SetBit(7)
+
+	test := bs1.Equals(bs2)
+	if test != true {
+		t.Errorf("Expected Equals to return true, got: %v", test)
+	}
+
+	bs2.SetBit(11)
+	test = bs1.Equals(bs2)
+	if test != false {
+		t.Errorf("Expected Unequal Equals to return false, got: %v", test)
+	}
 }
 
-/*
 func TestUnion(t *testing.T) {
 	bs1 := newBitsetOrFatal(t, 16)
 	bs2 := newBitsetOrFatal(t, 8)
 
-	// set up bs1
-	bs1.SetBit(1)
-	bs1.SetBit(5)
+	// set up bitsets
+	bs1.SetBit(2)
+	bs1.SetBit(13)
 	bs1.SetBit(11)
 
-	bs2.SetBit(2)
+	bs2.SetBit(5)
 	bs2.SetBit(3)
 	bs2.SetBit(7)
 
-	bs3 := bs1.Union(bs2)
+	// So, right now union is not properly unioning the elements
+	// in the larger bitset of size 16. TODO next fix this.
+	// otherwise Union works
+	bs3, _ := bs1.Union(bs2)
+	if bs3 == nil {
+		t.Fatalf("union bitset returned nil")
+	}
 
-	// bs1 and bs2 should both be subsets of bs3
-	test bs3.IsSubset(bs2)
+	bs4 := newBitsetOrFatal(t, 16)
+	bs4.SetBit(2)
+	bs4.SetBit(3)
+	bs4.SetBit(5)
+	bs4.SetBit(7)
+	bs4.SetBit(11)
+	bs4.SetBit(13)
+
+	equals := bs3.Equals(bs4)
+	if !equals {
+		t.Errorf("Expected bs3 to equal bs4 after union, got: %v\n bs3: %v\n bs4: %v\n", equals, bs3, bs4)
+	}
 }
-*/
