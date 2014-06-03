@@ -124,3 +124,47 @@ func TestIsSubset(t *testing.T) {
 		t.Errorf("IsSubset test failure")
 	}
 }
+
+func TestContains(t *testing.T) {
+	bs := newBitsetOrFatal(t, 8)
+	bs.SetBit(5)
+	test := bs.Contains(9)
+	if test != false {
+		t.Errorf("calling Contains with n > Bitset.Max must return false")
+	}
+
+	test = bs.Contains(6)
+	if test != false {
+		t.Errorf("Expected Contains to return false, got: ", test)
+	}
+
+	test = bs.Contains(5)
+	if test != true {
+		t.Errorf("Expected Contains to return true, got: ", test)
+	}
+}
+
+func TestEquals(t *testing.T) {
+
+}
+
+/*
+func TestUnion(t *testing.T) {
+	bs1 := newBitsetOrFatal(t, 16)
+	bs2 := newBitsetOrFatal(t, 8)
+
+	// set up bs1
+	bs1.SetBit(1)
+	bs1.SetBit(5)
+	bs1.SetBit(11)
+
+	bs2.SetBit(2)
+	bs2.SetBit(3)
+	bs2.SetBit(7)
+
+	bs3 := bs1.Union(bs2)
+
+	// bs1 and bs2 should both be subsets of bs3
+	test bs3.IsSubset(bs2)
+}
+*/
