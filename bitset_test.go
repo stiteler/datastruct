@@ -106,6 +106,18 @@ func TestCardinality(t *testing.T) {
 	}
 }
 
+func TestCopy(t *testing.T) {
+	bs1 := newBitsetOrFatal(t, 16)
+	bs1.SetBit(14)
+	bs1.SetBit(4)
+
+	bs2 := bs1.Copy()
+	equal := bs2.Equals(bs1)
+	if !equal {
+		t.Errorf("Copy failure, bs2: %v", bs2)
+	}
+}
+
 func TestIsSubset(t *testing.T) {
 	bs1 := newBitsetOrFatal(t, 8)
 	bs2 := newBitsetOrFatal(t, 8)
@@ -198,8 +210,8 @@ func TestUnion(t *testing.T) {
 	bs4.SetBit(11)
 	bs4.SetBit(13)
 
-	equals := bs3.Equals(bs4)
-	if !equals {
-		t.Errorf("Expected bs3 to equal bs4 after union, got: %v\n bs3: %v\n bs4: %v\n", equals, bs3, bs4)
+	equal := bs3.Equals(bs4)
+	if !equal {
+		t.Errorf("Expected bs3 to equal bs4 after union, got: %v\n bs3: %v\n bs4: %v\n", equal, bs3, bs4)
 	}
 }

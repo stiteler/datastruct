@@ -95,6 +95,17 @@ func (b *Bitset) Cardinality() int {
 	return cardinality
 }
 
+func (old *Bitset) Copy() *Bitset {
+	max := old.Max
+	byteCount := len(old.Bytes)
+	bytes := make([]byte, byteCount)
+	newSet := &Bitset{max, bytes}
+	for i, _ := range old.Bytes {
+		newSet.Bytes[i] = old.Bytes[i]
+	}
+	return newSet
+}
+
 // IsSubset returns true if arg bitset is a subset of the given bitset
 func (this *Bitset) IsSubset(that *Bitset) (bool, error) {
 	// check first if impossible by cardinality:
@@ -163,14 +174,17 @@ func (this *Bitset) Equals(that *Bitset) bool {
 	return true
 }
 
+// Union returns a new bitset, the union of this and that
 func (this *Bitset) Union(that *Bitset) (*Bitset, error) {
-	size := max(len(this.Bytes), len(that.Bytes)) * 8
-	union, err := NewBitset(size)
-	if err != nil {
-		return nil, err
+	var union *Bitset
+	if this.Max > that.Max {
+		union = this.Copy()
+	} else {
+		union = that.Copy()
 	}
 
 	byteCount := min(len(this.Bytes), len(that.Bytes))
+	fmt.Println(byteCount)
 	// this isn't working:
 	for i := 0; i < byteCount; i++ {
 		// inclusive-or the two bytes into the new bitset
@@ -183,15 +197,13 @@ func (this *Bitset) Union(that *Bitset) (*Bitset, error) {
 func min(a, b int) int {
 	if a < b {
 		return a
-	} else {
-		return b
 	}
+	return b
 }
 
 func max(a, b int) int {
 	if a > b {
 		return a
-	} else {
-		return b
 	}
+	return b
 }
