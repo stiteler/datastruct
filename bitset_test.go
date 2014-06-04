@@ -194,9 +194,6 @@ func TestUnion(t *testing.T) {
 	bs2.SetBit(3)
 	bs2.SetBit(7)
 
-	// So, right now union is not properly unioning the elements
-	// in the larger bitset of size 16. TODO next fix this.
-	// otherwise Union works
 	bs3, _ := bs1.Union(bs2)
 	if bs3 == nil {
 		t.Fatalf("union bitset returned nil")
