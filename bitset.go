@@ -1,16 +1,17 @@
 package datastruct
 
-// bitset data structure in go
-// by Steaz
+// author: www.github.com/steaz
 import (
 	"fmt"
 )
 
+// Bitsets are used typically to store sets of integers from 0 to Max-1
 type Bitset struct {
 	Max   int
 	Bytes []byte
 }
 
+// String allows Bitset to implement the Stringer interface
 func (b *Bitset) String() string {
 	ret := "[ "
 	for i := 0; i < b.Max; i++ {
@@ -95,6 +96,7 @@ func (b *Bitset) Cardinality() int {
 	return cardinality
 }
 
+// Copy returns an exact copy of the old bitset
 func (old *Bitset) Copy() *Bitset {
 	max := old.Max
 	byteCount := len(old.Bytes)
@@ -144,6 +146,7 @@ func (b *Bitset) Contains(n int) bool {
 	return contains
 }
 
+// Equals returns true if this bitset is equal to that, even if max different
 func (this *Bitset) Equals(that *Bitset) bool {
 	// find shorter bitset
 	minBytes := min(len(this.Bytes), len(that.Bytes))
@@ -175,7 +178,7 @@ func (this *Bitset) Equals(that *Bitset) bool {
 }
 
 // Union returns a new bitset, the union of this and that
-func (this *Bitset) Union(that *Bitset) (*Bitset, error) {
+func (this *Bitset) Union(that *Bitset) *Bitset {
 	var union *Bitset
 	if this.Max > that.Max {
 		union = this.Copy()
@@ -184,16 +187,30 @@ func (this *Bitset) Union(that *Bitset) (*Bitset, error) {
 	}
 
 	byteCount := min(len(this.Bytes), len(that.Bytes))
-	fmt.Println(byteCount)
+
 	// this isn't working:
 	for i := 0; i < byteCount; i++ {
 		// inclusive-or the two bytes into the new bitset
 		union.Bytes[i] = (this.Bytes[i] | that.Bytes[i])
 	}
 
-	return union, nil
+	return union
 }
 
+func (this *Bitset) Difference(that *Bitset) *Bitset {
+	diff := this.Copy()
+	byteCount := min(len(this.Bytes), len(that.Bytes))
+	for i := 0; i < byteCount; i++ {
+		diff.Bytes[i] = this.Bytes[i] & (that.Bytes[i] ^ 255)
+	}
+	return diff
+}
+
+func (this *Bitset) Intersect(that *Bitset) *Bitset {
+	return nil
+}
+
+// min returns minimum of a, b int
 func min(a, b int) int {
 	if a < b {
 		return a
@@ -201,6 +218,7 @@ func min(a, b int) int {
 	return b
 }
 
+// max is not currently in use
 func max(a, b int) int {
 	if a > b {
 		return a

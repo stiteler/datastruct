@@ -160,7 +160,6 @@ func TestEquals(t *testing.T) {
 	bs1 := newBitsetOrFatal(t, 8)
 	bs2 := newBitsetOrFatal(t, 16)
 
-	// Equals should retrun true, disregards Max
 	bs1.SetBit(1)
 	bs1.SetBit(5)
 	bs1.SetBit(7)
@@ -194,7 +193,7 @@ func TestUnion(t *testing.T) {
 	bs2.SetBit(3)
 	bs2.SetBit(7)
 
-	bs3, _ := bs1.Union(bs2)
+	bs3 := bs1.Union(bs2)
 	if bs3 == nil {
 		t.Fatalf("union bitset returned nil")
 	}
@@ -210,5 +209,59 @@ func TestUnion(t *testing.T) {
 	equal := bs3.Equals(bs4)
 	if !equal {
 		t.Errorf("Expected bs3 to equal bs4 after union, got: %v\n bs3: %v\n bs4: %v\n", equal, bs3, bs4)
+	}
+}
+
+func TestDifference(t *testing.T) {
+	bs1 := newBitsetOrFatal(t, 16)
+	bs2 := newBitsetOrFatal(t, 8)
+
+	// set up bitsets
+	bs1.SetBit(1)
+	bs1.SetBit(2)
+	bs1.SetBit(3)
+
+	bs2.SetBit(1)
+	bs2.SetBit(2)
+	bs2.SetBit(4)
+
+	bs3 := bs1.Difference(bs2)
+	if bs3 == nil {
+		t.Fatalf("difference bitset returned nil")
+	}
+
+	bs4 := newBitsetOrFatal(t, 16)
+	bs4.SetBit(3)
+
+	equal := bs4.Equals(bs3)
+	if !equal {
+		t.Errorf("Expected bs3 to equal bs4 after difference, got %v\n bs3: %v\n bs4: %v\n", equal, bs3, bs4)
+	}
+}
+
+func TestIntersect(t *testing.T) {
+	bs1 := newBitsetOrFatal(t, 16)
+	bs2 := newBitsetOrFatal(t, 8)
+
+	// set up bitsets
+	bs1.SetBit(1)
+	bs1.SetBit(2)
+	bs1.SetBit(3)
+
+	bs2.SetBit(1)
+	bs2.SetBit(5)
+	bs2.SetBit(4)
+
+	bs3 := bs1.Intersect(bs2)
+	if bs3 == nil {
+		t.Fatalf("intersect returned nil")
+	}
+
+	bs4 := newBitsetOrFatal(t, 16)
+	bs4.SetBit(1)
+
+	equal := bs4.Equals(bs3)
+	if !equal {
+		t.Errorf("Expected bs3 to equal bs4 after intersect, got %v\n bs3: %v\n bs4: %v\n", equal, bs3, bs4)
 	}
 }
