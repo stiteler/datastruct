@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-// Bitsets are used typically to store sets of integers from 0 to Max-1
+// Bitset is used typically to store sets of integers from 0 to Max-1
 type Bitset struct {
 	Max   int
 	Bytes []byte
@@ -66,7 +66,7 @@ func (b *Bitset) GetBit(n int) (bool, error) {
 // Clear clears the entire bitset
 func (b *Bitset) Clear() error {
 	if b == nil {
-		return fmt.Errorf("Can't clear nil bitset")
+		return fmt.Errorf("can't clear nil bitset")
 	}
 	for _byte := range b.Bytes {
 		b.Bytes[_byte] = 0
@@ -98,12 +98,12 @@ func (b *Bitset) Cardinality() int {
 }
 
 // Copy returns an exact copy of the old bitset
-func (old *Bitset) Copy() *Bitset {
+func (b *Bitset) Copy() *Bitset {
 	max := old.Max
 	byteCount := len(old.Bytes)
 	bytes := make([]byte, byteCount)
 	newSet := &Bitset{max, bytes}
-	for i, _ := range old.Bytes {
+	for i := range old.Bytes {
 		newSet.Bytes[i] = old.Bytes[i]
 	}
 	return newSet
@@ -197,6 +197,7 @@ func (this *Bitset) Union(that *Bitset) *Bitset {
 	return union
 }
 
+// Difference returns a bitset with the difference between this and that
 func (this *Bitset) Difference(that *Bitset) *Bitset {
 	diff := this.Copy()
 	byteCount := min(len(this.Bytes), len(that.Bytes))
@@ -209,6 +210,7 @@ func (this *Bitset) Difference(that *Bitset) *Bitset {
 	return diff
 }
 
+// Intersect returns a bitset representing the intersection of bitsets this and that
 func (this *Bitset) Intersect(that *Bitset) *Bitset {
 	byteCount := min(len(this.Bytes), len(that.Bytes))
 	size := byteCount * 8

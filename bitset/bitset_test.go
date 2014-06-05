@@ -40,6 +40,7 @@ func TestSetBit(t *testing.T) {
 	}
 	expectedInt := 1
 	expected := []byte{byte(expectedInt)}
+	//todo: can replace call to bytes with call to Equals in package
 	if !bytes.Equal(expected, bs.Bytes) {
 		t.Errorf("bit not set correctly")
 	}
