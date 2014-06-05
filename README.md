@@ -3,6 +3,8 @@ some data structures in go!
 
 #### bitset.go: 
 
+[![GoDoc](https://godoc.org/github.com/steaz/datastruct/bitset?status.png)](https://godoc.org/github.com/steaz/datastruct/bitset)
+
 implementation of bitset in go (clearly), but what's more important is this is my first true foray into the realm of TDD (test driven development).  I'm writing a test for each method, ensuring it fails, then implementing the method to make it pass. A lot easier than I thought at first, and loving the testing package that comes stock with go. 
 
 #### linked.go: 
