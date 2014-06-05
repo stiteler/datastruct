@@ -1,6 +1,7 @@
 package datastruct
 
 // author: www.github.com/steaz
+// suggestions/comments/questions?: twitter.com/steazgaming
 import (
 	"fmt"
 )
@@ -188,7 +189,6 @@ func (this *Bitset) Union(that *Bitset) *Bitset {
 
 	byteCount := min(len(this.Bytes), len(that.Bytes))
 
-	// this isn't working:
 	for i := 0; i < byteCount; i++ {
 		// inclusive-or the two bytes into the new bitset
 		union.Bytes[i] = (this.Bytes[i] | that.Bytes[i])
@@ -201,26 +201,29 @@ func (this *Bitset) Difference(that *Bitset) *Bitset {
 	diff := this.Copy()
 	byteCount := min(len(this.Bytes), len(that.Bytes))
 	for i := 0; i < byteCount; i++ {
+		// we're masking 1's against that's bytes, 00100001 ^ 255 == 11011110
+		// then we & it to this's bytes: 10100010 & 11011110 == 10000010 which is the diff.
+		// between 10100010 and 00100001
 		diff.Bytes[i] = this.Bytes[i] & (that.Bytes[i] ^ 255)
 	}
 	return diff
 }
 
 func (this *Bitset) Intersect(that *Bitset) *Bitset {
-	return nil
+	byteCount := min(len(this.Bytes), len(that.Bytes))
+	size := byteCount * 8
+	// todo: handle this error
+	inter, _ := NewBitset(size)
+	for i := 0; i < byteCount; i++ {
+		inter.Bytes[i] = this.Bytes[i] & that.Bytes[i]
+	}
+
+	return inter
 }
 
 // min returns minimum of a, b int
 func min(a, b int) int {
 	if a < b {
-		return a
-	}
-	return b
-}
-
-// max is not currently in use
-func max(a, b int) int {
-	if a > b {
 		return a
 	}
 	return b
