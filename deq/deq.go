@@ -16,11 +16,11 @@ type Object int32
 
 type Node struct {
 	// what should the item be? an empty interface? for now, int
-	item Object
+	item *Object
 	next *Node
 }
 
-// NewDequeue creates a new Dequeue, I even need this?
+// NewDequeue creates a new Dequeue, convenience wrapper
 func NewDequeue() *Dequeue {
 	return &Dequeue{}
 }
@@ -28,6 +28,7 @@ func NewDequeue() *Dequeue {
 // Stubs:
 
 // String allows Dequeue to be a Stringer
+// TODO need to define more methods to implement atm.
 func (d *Dequeue) String() string {
 	return fmt.Sprintf("Test String")
 }
@@ -37,7 +38,7 @@ func (d *Dequeue) HeadAdd(o Object) error {
 	// what do I need to clean on HeadAdd?
 
 	// create new node, n
-	n := &Node{o, nil}
+	n := &Node{&o, nil}
 
 	// if this is a new dequeue, just pop the new node on
 	if d.count == 0 {
@@ -52,19 +53,46 @@ func (d *Dequeue) HeadAdd(o Object) error {
 }
 
 // TailAdd ...
-// func (d *Dequeue) TailAdd() {}
+func (d *Dequeue) TailAdd(o Object) error {
+    n := &Node{&o, nil}
+    
+    if d.count == 0 {
+        d.head, d.tail = n, n
+        d.count++
+        return nil
+    }
+    
+    d.tail.next = n
+    return nil
+}
 
 // HeadPeek ...
-// func (d *Dequeue) HeadPeek() Object {}
+func (d *Dequeue) HeadPeek() (*Object, error) {
+    if d.count == 0 {
+           return nil, underflow()
+    }
+    
+    return d.head.item, nil
+}
 
 // TailPeek ...
-// func (d *Dequeue) TailPeek() Object {}
+func (d *Dequeue) TailPeek() (*Object, error) {
+    if d.count == 0 {
+        return nil, underflow()   
+    }
+    
+    return d.tail.item, nil
+}
 
 // HeadRemove ...
 // func (d *Dequeue) HeadRemove() Object {}
 
 // TailRemove ...
 // func (d *Dequeue) TailRemove() Object {}
+
+func underflow() error {
+    return fmt.Errorf("Cannot peek/remove from empty Dequeue")   
+}
 
 // Size returns number of objects in Dequeue, need to test
 func (d *Dequeue) Size() int32 {
