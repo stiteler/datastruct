@@ -1,15 +1,19 @@
 package deq
 
 import (
-	"fmt"
 	"testing"
 )
 
-func newDeqOrFatal(t *testing.T) *Dequeue {
+func TestNewDequeue(t *testing.T) {
 	spawn := NewDequeue()
 	if spawn == nil {
-		t.Errorf("Received nil Dequeue from NewDequeue()")
+		t.Fatalf("spawned nil Dequeue on NewDequeue()")
 	}
-	fmt.Println("Spawn: ", spawn)
-	return spawn
+}
+
+func TestHeadAdd(t *testing.T) {
+	d := NewDequeue()
+	if err := d.HeadAdd(5); err != nil {
+		t.Errorf("HeadAdd Error: %v", err)
+	}
 }
