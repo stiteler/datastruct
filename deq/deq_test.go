@@ -170,15 +170,15 @@ func TestTailRemove(t *testing.T) {
 	if d.Size() != 1 {
 		t.Errorf("Expected TailRemove() to result in a size of 1, got: %v", d.Size())
 	}
-	if *item != Object(13) {
-		t.Errorf("Expected TailRemove() to return 13, got: ", item)
+	if *item != Object(45) {
+		t.Errorf("Expected TailRemove() to return 45, got: ", item)
 	}
 
 	item, err = d.TailRemove()
 	if d.Size() != 0 {
 		t.Errorf("Expected TailRemove() to result in a size of 0, got: %v", d.Size())
 	}
-	if *item != Object(45) {
-		t.Errorf("Expected TailRemove() to return 45, got: ", item)
+	if *item != Object(13) {
+		t.Errorf("Expected TailRemove() to return 13, got: ", item)
 	}
 }

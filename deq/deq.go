@@ -79,7 +79,7 @@ func (d *Dequeue) TailAdd(o Object) error {
 	}
 
 	d.count++
-	d.tail.next = n
+	d.tail.next, d.tail = n, n
 	return nil
 }
 
@@ -122,7 +122,6 @@ func (d *Dequeue) HeadRemove() (*Object, error) {
 }
 
 // TailRemove removes the item at the tail from the Dequeue
-// TODO fix a TailRemove Bug
 func (d *Dequeue) TailRemove() (*Object, error) {
 	if d.count == 0 {
 		return nil, underflow()
@@ -131,7 +130,7 @@ func (d *Dequeue) TailRemove() (*Object, error) {
 	item := d.tail.item
 
 	if d.count == 1 {
-		d.tail, d.tail = nil, nil
+		d.head, d.tail = nil, nil
 		d.count--
 		return item, nil
 	}
