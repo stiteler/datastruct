@@ -11,7 +11,8 @@ type Dequeue struct {
 	count int
 }
 
-// Payload is a type I'm defining for ease of flexiblity later
+// Object is a type I'm defining for ease of flexiblity later
+// I don't like this.. maybe an interface?
 type Object int32
 
 type Node struct {
