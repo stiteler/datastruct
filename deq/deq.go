@@ -38,7 +38,13 @@ func (d *Dequeue) String() string {
 	s := "{"
 	runner := Node{nil, d.head}
 	for runner.next != nil {
-		s = fmt.Sprintf("%s%v,", s, runner.next.item)
+		// if last item, skip comma
+		if runner.next.next == nil {
+			s = fmt.Sprintf("%s%v", s, runner.next.item)
+		} else {
+			s = fmt.Sprintf("%s%v,", s, runner.next.item)
+		}
+
 		runner = *runner.next
 	}
 	s = s + "}"
