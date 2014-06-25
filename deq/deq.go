@@ -8,14 +8,13 @@ import (
 type Dequeue struct {
 	head  *Node
 	tail  *Node
-	count int32
+	count int
 }
 
 // Payload is a type I'm defining for ease of flexiblity later
 type Object int32
 
 type Node struct {
-	// what should the item be? an empty interface? for now, int
 	item *Object
 	next *Node
 }
@@ -25,15 +24,31 @@ func NewDequeue() *Dequeue {
 	return &Dequeue{}
 }
 
-// Stubs:
-
 // String allows Dequeue to be a Stringer
-// TODO need to define more methods to implement atm.
 func (d *Dequeue) String() string {
-	return fmt.Sprintf("Test String")
+	if d.Size() == 0 {
+		return fmt.Sprintf("{}")
+	}
+
+	if d.Size() == 1 {
+		return fmt.Sprintf("{%v}", d.head.item)
+	}
+
+	s := "{"
+	runner := Node{nil, d.head}
+	for runner.next != nil {
+		s = fmt.Sprintf("%s%v,", s, runner.next.item)
+		runner = *runner.next
+	}
+	s = s + "}"
+	return s
 }
 
-// HeadAdd ...
+func (o *Object) String() string {
+	return fmt.Sprintf("%v", *o)
+}
+
+// HeadAdd adds an item to the head of the Dequeue
 func (d *Dequeue) HeadAdd(o Object) error {
 	// what do I need to clean on HeadAdd?
 
@@ -49,53 +64,100 @@ func (d *Dequeue) HeadAdd(o Object) error {
 
 	// othewise point next head, then point head at new
 	n.next, d.head = d.head, n
+	d.count++
 	return nil
 }
 
-// TailAdd ...
+// TailAdd adds an item to the Tail of the Dequeue
 func (d *Dequeue) TailAdd(o Object) error {
-    n := &Node{&o, nil}
-    
-    if d.count == 0 {
-        d.head, d.tail = n, n
-        d.count++
-        return nil
-    }
-    
-    d.tail.next = n
-    return nil
+	n := &Node{&o, nil}
+
+	if d.count == 0 {
+		d.head, d.tail = n, n
+		d.count++
+		return nil
+	}
+
+	d.count++
+	d.tail.next = n
+	return nil
 }
 
-// HeadPeek ...
+// HeadPeek returns the item at the Head without removal
 func (d *Dequeue) HeadPeek() (*Object, error) {
-    if d.count == 0 {
-           return nil, underflow()
-    }
-    
-    return d.head.item, nil
+	if d.count == 0 {
+		return nil, underflow()
+	}
+
+	return d.head.item, nil
 }
 
-// TailPeek ...
+// TailPeek returns the item at the Tail without removal
 func (d *Dequeue) TailPeek() (*Object, error) {
-    if d.count == 0 {
-        return nil, underflow()   
-    }
-    
-    return d.tail.item, nil
+	if d.count == 0 {
+		return nil, underflow()
+	}
+
+	return d.tail.item, nil
 }
 
-// HeadRemove ...
-// func (d *Dequeue) HeadRemove() Object {}
+// HeadRemove removes the item at the head from the Dequeue
+func (d *Dequeue) HeadRemove() (*Object, error) {
 
-// TailRemove ...
-// func (d *Dequeue) TailRemove() Object {}
+	if d.count == 0 {
+		return nil, underflow()
+	}
 
+	item := d.head.item
+
+	if d.count == 1 {
+		d.head, d.tail = nil, nil
+		d.count--
+		return item, nil
+	}
+
+	d.head = d.head.next
+	d.count--
+	return item, nil
+}
+
+// TailRemove removes the item at the tail from the Dequeue
+// TODO fix a TailRemove Bug
+func (d *Dequeue) TailRemove() (*Object, error) {
+	if d.count == 0 {
+		return nil, underflow()
+	}
+
+	item := d.tail.item
+
+	if d.count == 1 {
+		d.tail, d.tail = nil, nil
+		d.count--
+		return item, nil
+	}
+
+	// need to find the new tail
+	newTail := &Node{nil, d.head}
+	for newTail.next != d.tail {
+		newTail = newTail.next
+	}
+
+	// nillify the old tail
+	newTail.next = nil
+
+	// set tail to newTail, decrement, and return
+	d.tail = newTail
+	d.count--
+	return item, nil
+}
+
+// underflow wraps an error for removal from empty Dequeue
 func underflow() error {
-    return fmt.Errorf("Cannot peek/remove from empty Dequeue")   
+	return fmt.Errorf("Cannot peek/remove from empty Dequeue")
 }
 
 // Size returns number of objects in Dequeue, need to test
-func (d *Dequeue) Size() int32 {
+func (d *Dequeue) Size() int {
 	return d.count
 }
 
