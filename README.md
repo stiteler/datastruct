@@ -9,6 +9,8 @@ implementation of bitset in go (clearly), but what's more important is this is m
 
 #### deq.go
 
+[![GoDoc](https://godoc.org/github.com/steaz/datastruct/deq?status.png)](https://godoc.org/github.com/steaz/datastruct/deq)
+
 implementation of a Dequeue in Go, best known as a double ended queue, pronounced "Deck" (right?). Further practicing some TDD and refreshing my LL traversal algs. 
 
 #### linked.go: 
