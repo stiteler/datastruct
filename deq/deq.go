@@ -1,3 +1,7 @@
+// Code by Steaz, June 2014
+// Deq implements a double-ended queue data structure
+// Main learning experience: empty interfaces to give 'generic' nature to data
+
 package deq
 
 import (
@@ -11,12 +15,8 @@ type Dequeue struct {
 	count int
 }
 
-// Object is a type I'm defining for ease of flexiblity later
-// I don't like this.. maybe an interface?
-type Object interface{}
-
+// Node is an entity of the Dequeue
 type Node struct {
-	// item Object
 	item interface{}
 	next *Node
 }
@@ -52,12 +52,6 @@ func (d *Dequeue) String() string {
 	s = s + "}"
 	return s
 }
-
-/*
-func (o Object) String() string {
-	return fmt.Sprintf("%v", *o)
-}
-*/
 
 // HeadAdd adds an item to the head of the Dequeue
 func (d *Dequeue) HeadAdd(o interface{}) error {
@@ -95,7 +89,7 @@ func (d *Dequeue) TailAdd(o interface{}) error {
 }
 
 // HeadPeek returns the item at the Head without removal
-func (d *Dequeue) HeadPeek() (Object, error) {
+func (d *Dequeue) HeadPeek() (interface{}, error) {
 	if d.count == 0 {
 		return nil, underflow()
 	}
@@ -104,7 +98,7 @@ func (d *Dequeue) HeadPeek() (Object, error) {
 }
 
 // TailPeek returns the item at the Tail without removal
-func (d *Dequeue) TailPeek() (Object, error) {
+func (d *Dequeue) TailPeek() (interface{}, error) {
 	if d.count == 0 {
 		return nil, underflow()
 	}
@@ -113,7 +107,7 @@ func (d *Dequeue) TailPeek() (Object, error) {
 }
 
 // HeadRemove removes the item at the head from the Dequeue
-func (d *Dequeue) HeadRemove() (Object, error) {
+func (d *Dequeue) HeadRemove() (interface{}, error) {
 
 	if d.count == 0 {
 		return nil, underflow()
@@ -133,7 +127,7 @@ func (d *Dequeue) HeadRemove() (Object, error) {
 }
 
 // TailRemove removes the item at the tail from the Dequeue
-func (d *Dequeue) TailRemove() (Object, error) {
+func (d *Dequeue) TailRemove() (interface{}, error) {
 	if d.count == 0 {
 		return nil, underflow()
 	}
