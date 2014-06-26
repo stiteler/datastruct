@@ -13,10 +13,11 @@ type Dequeue struct {
 
 // Object is a type I'm defining for ease of flexiblity later
 // I don't like this.. maybe an interface?
-type Object int32
+type Object interface{}
 
 type Node struct {
-	item *Object
+	// item Object
+	item interface{}
 	next *Node
 }
 
@@ -37,6 +38,7 @@ func (d *Dequeue) String() string {
 
 	s := "{"
 	runner := Node{nil, d.head}
+
 	for runner.next != nil {
 		// if last item, skip comma
 		if runner.next.next == nil {
@@ -51,16 +53,18 @@ func (d *Dequeue) String() string {
 	return s
 }
 
-func (o *Object) String() string {
+/*
+func (o Object) String() string {
 	return fmt.Sprintf("%v", *o)
 }
+*/
 
 // HeadAdd adds an item to the head of the Dequeue
-func (d *Dequeue) HeadAdd(o Object) error {
+func (d *Dequeue) HeadAdd(o interface{}) error {
 	// what do I need to clean on HeadAdd?
 
 	// create new node, n
-	n := &Node{&o, nil}
+	n := &Node{o, nil}
 
 	// if this is a new dequeue, just pop the new node on
 	if d.count == 0 {
@@ -76,8 +80,8 @@ func (d *Dequeue) HeadAdd(o Object) error {
 }
 
 // TailAdd adds an item to the Tail of the Dequeue
-func (d *Dequeue) TailAdd(o Object) error {
-	n := &Node{&o, nil}
+func (d *Dequeue) TailAdd(o interface{}) error {
+	n := &Node{o, nil}
 
 	if d.count == 0 {
 		d.head, d.tail = n, n
@@ -91,7 +95,7 @@ func (d *Dequeue) TailAdd(o Object) error {
 }
 
 // HeadPeek returns the item at the Head without removal
-func (d *Dequeue) HeadPeek() (*Object, error) {
+func (d *Dequeue) HeadPeek() (Object, error) {
 	if d.count == 0 {
 		return nil, underflow()
 	}
@@ -100,7 +104,7 @@ func (d *Dequeue) HeadPeek() (*Object, error) {
 }
 
 // TailPeek returns the item at the Tail without removal
-func (d *Dequeue) TailPeek() (*Object, error) {
+func (d *Dequeue) TailPeek() (Object, error) {
 	if d.count == 0 {
 		return nil, underflow()
 	}
@@ -109,7 +113,7 @@ func (d *Dequeue) TailPeek() (*Object, error) {
 }
 
 // HeadRemove removes the item at the head from the Dequeue
-func (d *Dequeue) HeadRemove() (*Object, error) {
+func (d *Dequeue) HeadRemove() (Object, error) {
 
 	if d.count == 0 {
 		return nil, underflow()
@@ -129,7 +133,7 @@ func (d *Dequeue) HeadRemove() (*Object, error) {
 }
 
 // TailRemove removes the item at the tail from the Dequeue
-func (d *Dequeue) TailRemove() (*Object, error) {
+func (d *Dequeue) TailRemove() (Object, error) {
 	if d.count == 0 {
 		return nil, underflow()
 	}
