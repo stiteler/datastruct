@@ -65,7 +65,7 @@ func TestHeadPeek(t *testing.T) {
 	if err != nil {
 		t.Errorf("Unexpected HeadPeek() error: %v", err)
 	}
-	if *obj != 5 {
+	if obj != 5 {
 		t.Errorf("Expected HeadPeek() to return 5, got: %v", obj)
 	}
 
@@ -111,7 +111,7 @@ func TestTailPeek(t *testing.T) {
 	if err != nil {
 		t.Errorf("Unexpected HeadPeek() error: %v", err)
 	}
-	if *obj != 5 {
+	if obj != 5 {
 		t.Errorf("Expected HeadPeek() to return 5, got: %v", obj)
 	}
 
@@ -139,7 +139,7 @@ func TestHeadRemove(t *testing.T) {
 	if d.Size() != 1 {
 		t.Errorf("Expected HeadRemove() to result in a size of 1, got: %v", d.Size())
 	}
-	if *item != Object(89) {
+	if item != 89 {
 		t.Errorf("Expected HeadRemove() to return 89, got: ", item)
 	}
 
@@ -147,7 +147,7 @@ func TestHeadRemove(t *testing.T) {
 	if d.Size() != 0 {
 		t.Errorf("Expected HeadRemove() to result in a size of 0, got: %v", d.Size())
 	}
-	if *item != Object(5) {
+	if item != 5 {
 		t.Errorf("Expected HeadRemove() to return 5, got: ", item)
 	}
 }
@@ -170,7 +170,7 @@ func TestTailRemove(t *testing.T) {
 	if d.Size() != 1 {
 		t.Errorf("Expected TailRemove() to result in a size of 1, got: %v", d.Size())
 	}
-	if *item != Object(45) {
+	if item != 45 {
 		t.Errorf("Expected TailRemove() to return 45, got: ", item)
 	}
 
@@ -178,7 +178,7 @@ func TestTailRemove(t *testing.T) {
 	if d.Size() != 0 {
 		t.Errorf("Expected TailRemove() to result in a size of 0, got: %v", d.Size())
 	}
-	if *item != Object(13) {
+	if item != 13 {
 		t.Errorf("Expected TailRemove() to return 13, got: ", item)
 	}
 }
