@@ -99,12 +99,12 @@ func (b *Bitset) Cardinality() int {
 
 // Copy returns an exact copy of the old bitset
 func (b *Bitset) Copy() *Bitset {
-	max := old.Max
-	byteCount := len(old.Bytes)
+	max := b.Max
+	byteCount := len(b.Bytes)
 	bytes := make([]byte, byteCount)
 	newSet := &Bitset{max, bytes}
-	for i := range old.Bytes {
-		newSet.Bytes[i] = old.Bytes[i]
+	for i := range b.Bytes {
+		newSet.Bytes[i] = b.Bytes[i]
 	}
 	return newSet
 }
